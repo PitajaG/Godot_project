@@ -1,0 +1,47 @@
+[gd_scene load_steps=8 format=3 uid="uid://q88s4s253rnd"]
+
+[ext_resource type="Texture2D" uid="uid://btf54ylnwqo74" path="res://Resources/Assets/Models/patelnia_pan.png" id="1_wvt44"]
+[ext_resource type="Script" uid="uid://m5a8mp2vaiir" path="res://Resources/Scripts/damage_particle.gd" id="2_l12il"]
+
+[sub_resource type="Curve" id="Curve_5bgj6"]
+_limits = [-360.0, 360.0, 0.0, 1.0]
+_data = [Vector2(0, 1), 0.0, 0.0, 0, 0, Vector2(0.653285, -2.92685), 0.0, 0.0, 0, 0, Vector2(1, 1), 0.0, 0.0, 0, 0]
+point_count = 3
+
+[sub_resource type="CurveTexture" id="CurveTexture_nnbjw"]
+curve = SubResource("Curve_5bgj6")
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_637sp"]
+emission_shape_offset = Vector3(0.3, 1, 0)
+emission_shape = 2
+emission_sphere_radius = 0.7
+angle_curve = SubResource("CurveTexture_nnbjw")
+inherit_velocity_ratio = 1.23
+velocity_pivot = Vector3(1.85, 5.73, 7.76)
+direction = Vector3(3.14, 2.42, 1.43)
+spread = 154.518
+angular_velocity_min = -5.00002
+angular_velocity_max = 4.99998
+radial_velocity_min = -9.00002
+radial_velocity_max = 0.499978
+turbulence_noise_strength = 20.0
+turbulence_noise_scale = 8.71
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_r62bc"]
+albedo_texture = ExtResource("1_wvt44")
+metallic = 1.0
+
+[sub_resource type="BoxMesh" id="BoxMesh_wdw1l"]
+material = SubResource("StandardMaterial3D_r62bc")
+size = Vector3(0.11, 0.11, 0.11)
+
+[node name="melee_particle" type="GPUParticles3D"]
+emitting = false
+amount = 15
+lifetime = 0.5
+one_shot = true
+explosiveness = 0.77
+randomness = 1.0
+process_material = SubResource("ParticleProcessMaterial_637sp")
+draw_pass_1 = SubResource("BoxMesh_wdw1l")
+script = ExtResource("2_l12il")

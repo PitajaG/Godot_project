@@ -1,0 +1,88 @@
+[gd_scene load_steps=7 format=3 uid="uid://cjtd2hhxrxtr7"]
+
+[ext_resource type="Script" path="res://Resources/Scripts/item_freeze.gd" id="1_3vdbt"]
+[ext_resource type="PackedScene" uid="uid://dp2q2tksdoyur" path="res://Resources/Assets/Models/jetpack.glb" id="1_vixcv"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_vixcv"]
+size = Vector3(0.202271, 1.35291, 0.760742)
+
+[sub_resource type="Animation" id="Animation_3vdbt"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:rotation")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector3(0, 0, 0)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("MeshInstance3D:position")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector3(0, 0.4, 0)]
+}
+
+[sub_resource type="Animation" id="Animation_l33ej"]
+resource_name = "idle"
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:rotation")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.25, 0.5, 0.75, 1),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1),
+"update": 0,
+"values": [Vector3(0, 0, 0), Vector3(0, -1.5708, 0), Vector3(0, -3.14159, 0), Vector3(0, -4.71239, 0), Vector3(0, -6.28319, 0)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("MeshInstance3D:position")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 0.25, 0.5, 0.75, 1),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1),
+"update": 0,
+"values": [Vector3(0, 0.4, 0), Vector3(0, 0.6, 0), Vector3(0, 0.8, 0), Vector3(0, 0.6, 0), Vector3(0, 0.4, 0)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_htgak"]
+_data = {
+&"RESET": SubResource("Animation_3vdbt"),
+&"idle": SubResource("Animation_l33ej")
+}
+
+[node name="jetpack" type="RigidBody3D" groups=["jetpack"]]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.402369, 0)
+script = ExtResource("1_3vdbt")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.0303345, 0.611511, 0.00146484)
+shape = SubResource("BoxShape3D_vixcv")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.4, 0)
+
+[node name="jetpack2" parent="MeshInstance3D" instance=ExtResource("1_vixcv")]
+transform = Transform3D(0.138, 0, 3.72529e-09, 0, 0.138, 0, -3.72529e-09, 0, 0.138, 0, 0, 0)
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+libraries = {
+&"": SubResource("AnimationLibrary_htgak")
+}
+autoplay = "idle"

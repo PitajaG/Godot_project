@@ -1,0 +1,25 @@
+[gd_scene load_steps=4 format=3 uid="uid://3xw6cyoixitt"]
+
+[ext_resource type="PackedScene" uid="uid://bm5ww5ulms17j" path="res://Resources/Assets/Models/pedestal.glb" id="1_hsd6d"]
+
+[sub_resource type="CylinderShape3D" id="CylinderShape3D_aedhk"]
+height = 0.730591
+radius = 0.540527
+
+[sub_resource type="CylinderShape3D" id="CylinderShape3D_hsd6d"]
+height = 0.0727656
+radius = 0.25293
+
+[node name="pedestal" type="StaticBody3D"]
+
+[node name="StaticBody3D" type="MeshInstance3D" parent="."]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.289734, 0)
+shape = SubResource("CylinderShape3D_aedhk")
+
+[node name="CollisionShape3D2" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.69829, 0)
+shape = SubResource("CylinderShape3D_hsd6d")
+
+[node name="pedestal" parent="." instance=ExtResource("1_hsd6d")]

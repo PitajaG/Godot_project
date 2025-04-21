@@ -1,0 +1,16 @@
+[gd_scene load_steps=3 format=3 uid="uid://chx1idm8mtd8n"]
+
+[ext_resource type="PackedScene" uid="uid://hepp265j4lro" path="res://Resources/Assets/Models/chrupiaca.glb" id="1_nqvmd"]
+
+[sub_resource type="CylinderShape3D" id="CylinderShape3D_nqvmd"]
+
+[node name="chrupiaca_pickup" type="RigidBody3D"]
+collision_layer = 9
+collision_mask = 9
+
+[node name="chrupiaca" parent="." instance=ExtResource("1_nqvmd")]
+transform = Transform3D(0.32, 0, 0, 0, 0.32, 0, 0, 0, 0.32, 0, 0, 0)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="." groups=["Weapon_pickups"]]
+transform = Transform3D(-0.36, 0, 5.28485e-08, 0, 0.023, 0, -5.43585e-08, 0, -0.35, 0, 0, 0)
+shape = SubResource("CylinderShape3D_nqvmd")

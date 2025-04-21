@@ -1,0 +1,20 @@
+[gd_scene load_steps=4 format=3 uid="uid://c02xpkkjscmdc"]
+
+[ext_resource type="Script" uid="uid://iemf8cq7fam8" path="res://Resources/Scripts/test/rotating_mesh.gd" id="1_hyfxc"]
+
+[sub_resource type="BoxMesh" id="BoxMesh_hyfxc"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_sft45"]
+
+[node name="StaticBody3D" type="Node3D"]
+script = ExtResource("1_hyfxc")
+
+[node name="StaticBody3D" type="StaticBody3D" parent="." groups=["Enviroment"]]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.5, 0, 0)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="StaticBody3D"]
+mesh = SubResource("BoxMesh_hyfxc")
+skeleton = NodePath("../..")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="StaticBody3D"]
+shape = SubResource("BoxShape3D_sft45")

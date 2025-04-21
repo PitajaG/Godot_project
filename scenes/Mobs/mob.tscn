@@ -1,0 +1,63 @@
+[gd_scene load_steps=7 format=3 uid="uid://8c040lls0yn6"]
+
+[ext_resource type="Script" uid="uid://cvhdftw48t4se" path="res://Resources/Scripts/mob_state_machine.gd" id="1_vo23c"]
+[ext_resource type="PackedScene" uid="uid://c4u33imr776hy" path="res://Resources/Assets/Models/wojak.glb" id="2_gmyq2"]
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_u8nqw"]
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_h5js2"]
+radius = 12.0
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_4are2"]
+
+[sub_resource type="BoxMesh" id="BoxMesh_4are2"]
+
+[node name="Mob" type="CharacterBody3D" groups=["enemy"]]
+script = ExtResource("1_vo23c")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+
+[node name="wojak" parent="MeshInstance3D" instance=ExtResource("2_gmyq2")]
+transform = Transform3D(-0.294859, 0, 0.00911691, 0, 0.295, 0, -0.00911691, 0, -0.294859, -0.027, -0.888, -0.116)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1.19989, 0, 0, 0, 1, 0, 0.169035, -0.0480754)
+shape = SubResource("CapsuleShape3D_u8nqw")
+
+[node name="RayCast3D" type="RayCast3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.888, 0)
+target_position = Vector3(0, 0, -7)
+
+[node name="SightRange" type="Area3D" parent="."]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="SightRange"]
+shape = SubResource("SphereShape3D_h5js2")
+
+[node name="AttackRange" type="Area3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.305, 0)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="AttackRange"]
+transform = Transform3D(2.00812, 0, 0, 0, 1.4213, 0, 0, 0, 1.57601, 0, 0, -0.64)
+shape = SubResource("SphereShape3D_4are2")
+debug_color = Color(0.882834, 0, 0.0869569, 0.42)
+
+[node name="Eyes" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.887879, -0.357764)
+
+[node name="MeshInstance3D2" type="MeshInstance3D" parent="Eyes"]
+transform = Transform3D(-0.096, 0, 0, 0, 0.078, -5.13386e-08, 0, 1.17777e-08, 0.34, 0, 0, 0)
+mesh = SubResource("BoxMesh_4are2")
+skeleton = NodePath("../..")
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+
+[node name="NavigationAgent3D" type="NavigationAgent3D" parent="."]
+
+[node name="AttackTimer" type="Timer" parent="."]
+wait_time = 0.5
+
+[connection signal="body_entered" from="SightRange" to="." method="_on_sight_range_body_entered"]
+[connection signal="body_exited" from="SightRange" to="." method="_on_sight_range_body_exited"]
+[connection signal="body_entered" from="AttackRange" to="." method="_on_attack_range_body_entered"]
+[connection signal="body_exited" from="AttackRange" to="." method="_on_attack_range_body_exited"]
+[connection signal="timeout" from="AttackTimer" to="." method="_on_attack_timer_timeout"]

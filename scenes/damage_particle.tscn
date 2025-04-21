@@ -1,0 +1,47 @@
+[gd_scene load_steps=7 format=3 uid="uid://dolvl4rvsaq1b"]
+
+[ext_resource type="Script" uid="uid://m5a8mp2vaiir" path="res://Resources/Scripts/damage_particle.gd" id="1_fnpdl"]
+[ext_resource type="PackedScene" uid="uid://27nbrglcriw1" path="res://scenes/damage_info.tscn" id="2_fnpdl"]
+
+[sub_resource type="ViewportTexture" id="ViewportTexture_fnpdl"]
+viewport_path = NodePath("SubViewport")
+
+[sub_resource type="ORMMaterial3D" id="ORMMaterial3D_13l6q"]
+resource_local_to_scene = true
+transparency = 1
+shading_mode = 0
+albedo_texture = SubResource("ViewportTexture_fnpdl")
+disable_receive_shadows = true
+billboard_mode = 1
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_fnpdl"]
+emission_shape_offset = Vector3(1.5, 1.5, 0)
+emission_shape_scale = Vector3(0.4, 0.4, 0.4)
+inherit_velocity_ratio = 0.15
+turbulence_enabled = true
+turbulence_noise_strength = 5.38
+turbulence_noise_scale = 4.68
+turbulence_noise_speed = Vector3(-1.36, 4.79, 9.6)
+turbulence_noise_speed_random = 3.2
+turbulence_influence_min = 0.105
+turbulence_influence_max = 0.105
+
+[sub_resource type="QuadMesh" id="QuadMesh_13l6q"]
+
+[node name="damage_particle" type="GPUParticles3D"]
+transform = Transform3D(0.57, 0, 0, 0, 0.57, 0, 0, 0, 0.57, 0, 0, 0)
+material_override = SubResource("ORMMaterial3D_13l6q")
+cast_shadow = 0
+emitting = false
+amount = 1
+one_shot = true
+speed_scale = 0.8
+process_material = SubResource("ParticleProcessMaterial_fnpdl")
+draw_pass_1 = SubResource("QuadMesh_13l6q")
+script = ExtResource("1_fnpdl")
+
+[node name="SubViewport" type="SubViewport" parent="."]
+transparent_bg = true
+size = Vector2i(256, 128)
+
+[node name="Label" parent="SubViewport" instance=ExtResource("2_fnpdl")]

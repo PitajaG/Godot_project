@@ -1,0 +1,35 @@
+[gd_scene load_steps=6 format=3 uid="uid://dq0m5evwu6kcj"]
+
+[ext_resource type="Script" uid="uid://cpml5m0sfs8pj" path="res://Resources/Scripts/player.gd" id="1_3vyb7"]
+[ext_resource type="PackedScene" uid="uid://cmv4d6k0cu6rb" path="res://scenes/hand.tscn" id="2_g2els"]
+[ext_resource type="Script" uid="uid://dn3bsrpk6oh6i" path="res://Resources/Scripts/throwing.gd" id="3_qhqgy"]
+
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_u8vuu"]
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_3vyb7"]
+
+[node name="player" type="CharacterBody3D"]
+collision_layer = 2
+collision_mask = 7
+script = ExtResource("1_3vyb7")
+jump_force = 7.265
+wall_jump_force = 5.0
+wall_jump_horizontal_multiplier = 9.975
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+visible = false
+mesh = SubResource("CapsuleMesh_u8vuu")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+shape = SubResource("CapsuleShape3D_3vyb7")
+
+[node name="Camera3D" type="Camera3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.933242, 0.139683)
+fov = 94.4334
+
+[node name="Hand" parent="Camera3D" instance=ExtResource("2_g2els")]
+transform = Transform3D(0.911008, 0, -0.412389, 0, 1, 0, 0.412389, 0, 0.911008, 0.534883, -0.233129, -0.695855)
+script = ExtResource("3_qhqgy")
+
+[node name="Reach" type="RayCast3D" parent="Camera3D"]
+transform = Transform3D(1, 0, 0, 0, -0.0292686, -0.999952, 0, 2.99986, -0.00975622, 0, 0, -0.686821)

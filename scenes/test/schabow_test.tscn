@@ -1,0 +1,17 @@
+[gd_scene load_steps=4 format=3 uid="uid://ve8tsw2yac3c"]
+
+[ext_resource type="PackedScene" uid="uid://by2hvmjal7bop" path="res://Resources/Assets/Models/schabow.glb" id="1_cu1xq"]
+[ext_resource type="Script" uid="uid://da4ljnut67mdi" path="res://Resources/Scripts/util/show_normals.gd" id="2_jq712"]
+
+[sub_resource type="ConvexPolygonShape3D" id="ConvexPolygonShape3D_iwheg"]
+points = PackedVector3Array(-0.219299, 0.831447, 0.616665, 0.481027, 1.13123, 0.462886, 0.468347, 1.77684, 0.477738, 0.453132, 2.48418, 0.462481, -0.219299, 1.53845, 0.594928, -0.712077, 1.08485, 0.402536, -0.727293, 0.377507, 0.417792, -0.712077, -0.329493, 0.402536, -0.219299, 0.124447, 0.594928, -5.06639e-06, -1, -6.89626e-05, 0.636255, 0.344425, -0.000743985, 0.629848, 0.990377, -0.00128406, 0.608226, 1.69738, -0.00128406, 0.478091, 1.10736, -0.504473, 0.122389, 0.845089, -0.741013, -0.415102, 1.16465, -0.456814, -0.64067, 0.688205, -0.0767556, -0.662426, -0.0187946, -0.0767556, -0.64067, -0.726136, -0.0767556, 0.122389, -0.568911, -0.741013, 0.478091, -0.306642, -0.504473, 0.493307, 0.400358, -0.519729, 0.122389, 0.138089, -0.762615, -0.430452, 0.457654, -0.472205, -0.415102, -0.249345, -0.456814)
+
+[node name="schabow" instance=ExtResource("1_cu1xq")]
+
+[node name="schabowy" parent="." index="0"]
+script = ExtResource("2_jq712")
+
+[node name="StaticBody3D" type="StaticBody3D" parent="schabowy" index="0"]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="schabowy/StaticBody3D" index="0"]
+shape = SubResource("ConvexPolygonShape3D_iwheg")

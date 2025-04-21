@@ -1,0 +1,7 @@
+[gd_scene load_steps=2 format=3 uid="uid://cfmsa5sdvm23o"]
+
+[ext_resource type="PackedScene" uid="uid://hepp265j4lro" path="res://Resources/Assets/Models/chrupiaca.glb" id="1_pmsib"]
+
+[node name="chrupiaca_gun" type="Node3D"]
+
+[node name="chrupiaca" parent="." instance=ExtResource("1_pmsib")]

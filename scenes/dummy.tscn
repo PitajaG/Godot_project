@@ -1,0 +1,21 @@
+[gd_scene load_steps=4 format=3 uid="uid://br0iaghsp3mi8"]
+
+[ext_resource type="Script" uid="uid://bmess5os05qwb" path="res://Resources/Scripts/dummy.gd" id="1_k5f3b"]
+[ext_resource type="PackedScene" uid="uid://d0tq81s0yr52e" path="res://Resources/Assets/Models/dummy.glb" id="1_kre8v"]
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_k5f3b"]
+radius = 1.41838
+height = 4.77065
+
+[node name="dummy" type="CharacterBody3D" groups=["enemy"]]
+script = ExtResource("1_k5f3b")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+transform = Transform3D(0.4, 0, 0, 0, 0.4, 0, 0, 0, 0.4, 0, 0, 0)
+layers = 2
+
+[node name="dummy" parent="MeshInstance3D" instance=ExtResource("1_kre8v")]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+transform = Transform3D(0.4, 0, 0, 0, 0.4, 0, 0, 0, 0.4, 0, 0.874415, 0)
+shape = SubResource("CapsuleShape3D_k5f3b")

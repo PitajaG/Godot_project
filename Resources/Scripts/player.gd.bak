@@ -1,0 +1,270 @@
+extends CharacterBody3D
+
+# Referencje
+@onready var camera: Camera3D = $Camera3D
+@onready var collision_shape: CollisionShape3D = $CollisionShape3D
+@onready var capsule_shape : CapsuleShape3D = collision_shape.shape
+@onready var hand =  $Camera3D/hand
+@onready var reach = $Camera3D/Reach
+@onready var schabow_projectile = preload("res://scenes/Schabowy/schabow_projectile.tscn")
+@onready var schabow_gun = preload("res://scenes/Schabowy/schabow_gun.tscn")
+@onready var schabow_pickup = preload("res://scenes/Schabowy/schabow_pickup.tscn")
+@onready var chrupiaca_projectile = preload("res://scenes/Chrupiaca/chrupiaca_projectile.tscn")
+@onready var chrupiaca_pickup = preload("res://scenes/Chrupiaca/chrupiaca_pickup.tscn")
+@onready var chrupiaca_gun = preload("res://scenes/Chrupiaca/chrupiaca_gun.tscn")
+@onready var melee_anim = $AnimationPlayer
+@onready var melee_hitbox = $"Camera3D/melee hitbox"
+@onready var patelnia = $Camera3D/Patelnia
+@onready var dmg_particle = preload("res://scenes/damage_particle.tscn")
+@onready var label = preload("res://scenes/damage_info.tscn")
+@onready var FlightParticles1 = $FlightParticle1
+@onready var FlightParticles2 = $FlightParticle2
+
+# Parametry ruchu
+@export var speed: float = 5.0
+@export var crouch_speed: float = 2.5
+@export var jump_force: float = 4.5
+@export var gravity: float = 9.8
+
+# Przyspieszenie
+@export var ground_acceleration: float = 20.0
+@export var air_acceleration: float = 5.0
+@export var ground_friction: float = 15.0
+@export var air_friction: float = 1.0
+
+# Kucanie
+var is_crouching = false
+var original_camera_height: float
+var original_height: float 
+var crouch_height: float 
+
+# Parametry ślizgu
+var is_sliding: bool = false
+var slide_cooldown: float = 0.0
+@export var slide_cd_time: float = 0.2
+@export var slide_speed_multiplier: float = 1.5
+@export var slide_rotation_speed: float = 0.1  # 1.0f - max_speed
+
+# Parametry latania
+var is_flying: bool = false
+var can_fly: bool = false
+var current_flight_speed: float = 0.0 #NOT USED - do usunięcia?!
+var current_flight_velocity: float = 0.0
+@export var flight_speed: float = 6.0
+@export var flight_accel: float = 8.0
+@export var flight_fuel: float = 100.0
+@export var fuel_consumption: float = 15.0
+
+# Wall jump
+var last_wall_normal: Vector3 = Vector3.ZERO
+var wall_jump_timer: float = 0.0
+@export var wall_jump_force: float = 6.0
+@export var wall_jump_cooldown: float = 0.3
+@export var wall_jump_horizontal_multiplier: float = 1.2
+
+# Czułość myszy
+@export var mouse_sensitivity: float = 0.002
+
+# Zmienne wewnętrzne
+var camera_pitch: float = 0.0
+<<<<<<< HEAD
+var last_wall_normal: Vector3 = Vector3.ZERO
+var wall_jump_timer: float = 0.0
+var is_sliding: bool = false
+var original_camera_y: float
+var original_shape: CapsuleShape3D
+var is_flying: bool = false
+var current_flight_speed: float = 0.0
+var can_fly: bool = false
+var current_flight_velocity: float = 0.0
+var health = 100
+=======
+>>>>>>> main
+
+
+
+func _ready():
+	Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
+	# Ustawienie początkowych wartości na podstawie collidera
+	original_height = collision_shape.shape.height
+	original_camera_height = camera.position.y
+	crouch_height = original_height / 2
+
+func _input(event):
+	if event is InputEventMouseMotion:
+		rotate_y(-event.relative.x * mouse_sensitivity)
+		camera_pitch += event.relative.y * mouse_sensitivity
+		camera_pitch = clamp(camera_pitch, deg_to_rad(-90), deg_to_rad(90))
+		camera.rotation.x = -camera_pitch
+		
+func _physics_process(delta):
+	# Aktualizacja timerów
+	wall_jump_timer = max(wall_jump_timer - delta, 0.0)
+	slide_cooldown = max(slide_cooldown - delta, 0.0)
+	flight(delta)
+	
+	# Obsługa slide'u
+	if is_sliding:
+		if Input.is_action_just_released("slide"):
+			end_slide()
+	else:
+		if not slide_cooldown and is_on_floor() and Input.is_action_pressed("slide"):
+			start_slide()
+	
+	# Grawitacja
+	if not is_on_floor():
+		velocity.y -= gravity * delta
+	
+	# Kolizje ze ścianami
+	var is_on_wall = false
+	if get_last_slide_collision() != null:
+		last_wall_normal = get_last_slide_collision().get_normal()
+		is_on_wall = last_wall_normal.dot(Vector3.UP) < 0.1 && !is_on_floor()
+	
+	# Skoki
+	if Input.is_action_just_pressed("ui_accept"):
+		if is_on_floor():
+			if is_sliding:
+				end_slide()
+				velocity.y = jump_force
+			else:
+				velocity.y = jump_force
+		elif is_on_wall && wall_jump_timer <= 0.0:
+			var wall_jump_dir = last_wall_normal * wall_jump_horizontal_multiplier
+			velocity = Vector3(
+				wall_jump_dir.x * wall_jump_force,
+				jump_force,
+				wall_jump_dir.z * wall_jump_force
+			)
+			wall_jump_timer = wall_jump_cooldown
+		else: #is_in_air
+			pass
+	
+	# Ruch poziomy
+	var input_dir = Input.get_vector("ui_left", "ui_right", "ui_up", "ui_down")
+	var direction = (transform.basis * Vector3(input_dir.x, 0, input_dir.y)).normalized()
+	
+	if is_sliding:
+		var slide_speed = speed * slide_speed_multiplier
+		velocity = lerp(velocity, direction, slide_rotation_speed).normalized() * slide_speed
+	else: #is_moving
+		var target_velocity = direction * speed
+		var horizontal_velocity = Vector2(velocity.x, velocity.z)
+		var target_horizontal = Vector2(target_velocity.x, target_velocity.z)
+		
+		if input_dir != Vector2.ZERO:
+			var accel = ground_acceleration if is_on_floor() else air_acceleration
+			horizontal_velocity = horizontal_velocity.move_toward(target_horizontal, accel * delta)
+		else:
+			var friction = ground_friction if is_on_floor() else air_friction
+			horizontal_velocity = horizontal_velocity.move_toward(Vector2.ZERO, friction * delta)
+		
+		velocity.x = horizontal_velocity.x
+		velocity.z = horizontal_velocity.y
+	
+	move_and_slide()
+
+func start_crouch():
+	is_crouching = true
+	
+	# Zmiana parametrów capsule i kamery
+	self.global_position.y -= (original_height - crouch_height) / 2 - 0.01
+	capsule_shape.height = crouch_height
+	var tween = get_tree().create_tween()
+	tween.tween_property(camera, "position", Vector3(0, original_camera_height/2, 0), 0.1)
+	
+func end_crouch():
+	is_crouching = false
+	
+	# Przywrócenie parametrów kapsuły i kamery
+	self.global_position.y += (original_height - crouch_height) / 2 - 0.01
+	capsule_shape.height = original_height
+	var tween = get_tree().create_tween()
+	tween.tween_property(camera, "position", Vector3(0, original_camera_height, 0), 0.15) \
+		.set_ease(Tween.EASE_IN)
+
+func start_slide():
+	is_sliding = true
+	start_crouch()
+	
+	# Zachowaj oryginalną logikę przyspieszenia
+	var current_velocity = Vector3(velocity.x, 0, velocity.z)
+	var slide_direction: Vector3
+	if current_velocity.length():
+		slide_direction = current_velocity.normalized()
+	else:
+		slide_direction = -global_transform.basis.z.normalized()
+	
+	velocity = slide_direction * speed * slide_speed_multiplier
+
+func end_slide():
+	is_sliding = false
+	end_crouch()
+	
+	slide_cooldown = slide_cd_time
+
+#funkcja obsługująca podnoszenie broni i dodanie jej do ekwipunku
+func _item_pickup():
+		if Input.is_action_just_pressed("interact"):
+			if reach.get_collider() == null:
+				pass
+			elif reach.get_collider().is_in_group("Weapon_pickups"):
+				if len(Global.arsenal) > 0:
+					Global.weapon_index += 1
+				if reach.get_collider().get_name() == "schabow_pickup":
+					Global.arsenal.append("schabowy")
+					Global.weapon_picked.emit()
+				elif reach.get_collider().get_name() == "chrupiaca_pickup":
+					Global.arsenal.append("chrupiaca")
+					Global.weapon_picked.emit()
+				reach.get_collider().queue_free()
+				
+		else:
+			pass
+			
+func _process(delta):
+	_item_pickup()
+	powerup(delta)
+	var screen_size = get_viewport().size
+	$WeaponViewport/SubViewport/HandCamera.global_transform = $Camera3D.global_transform
+	
+func powerup(delta):
+	if Input.is_action_just_pressed("interact"):
+			if reach.get_collider() == null:
+				pass
+			elif reach.get_collider().is_in_group("jetpack"):
+				print("jetpack")
+				can_fly = true
+				reach.get_collider().queue_free()
+
+func flight(delta):
+	if Input.is_action_pressed("flight_debug") and flight_fuel > 0 and can_fly == true:
+		# Aktywacja lotu
+		if not is_flying:
+			is_flying = true
+			FlightParticles1.emitting = true
+			FlightParticles2.emitting = true  # Opcjonalne efekty
+		
+		# Oblicz prędkość lotu
+		current_flight_velocity = lerp(current_flight_velocity, flight_speed, flight_accel * delta)
+		velocity.y = current_flight_velocity
+		
+		# Zużycie paliwa
+		flight_fuel = max(0, flight_fuel - fuel_consumption * delta)
+	else:
+		# Dezaktywacja lotu
+		if is_flying:
+			is_flying = false
+			FlightParticles1.emitting = false
+			FlightParticles2.emitting = false
+			current_flight_velocity = 0.0
+
+func _unhandled_input(event):
+		if event.is_action_pressed("ui_cancel"):
+			get_tree().quit()
+
+func mob_hit(dmg):
+	health -= dmg
+	print(health)
+	if health <= 0:
+		queue_free()

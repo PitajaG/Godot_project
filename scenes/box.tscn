@@ -1,0 +1,30 @@
+[gd_scene load_steps=7 format=3 uid="uid://c4u41r82o6ok5"]
+
+[ext_resource type="PackedScene" uid="uid://dxpvjfsb0lwxq" path="res://Resources/Assets/Models/box.glb" id="1_3inec"]
+[ext_resource type="Texture2D" uid="uid://cr1o5gohfj28f" path="res://Resources/Assets/Textures/box_box.png" id="2_ks2v0"]
+
+[sub_resource type="PhysicsMaterial" id="PhysicsMaterial_3inec"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_c2ln5"]
+albedo_texture = ExtResource("2_ks2v0")
+
+[sub_resource type="BoxMesh" id="BoxMesh_3inec"]
+size = Vector3(0.95, 0.95, 0.95)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_3inec"]
+
+[node name="box" type="StaticBody3D"]
+collision_layer = 11
+collision_mask = 11
+physics_material_override = SubResource("PhysicsMaterial_3inec")
+
+[node name="box" parent="." instance=ExtResource("1_3inec")]
+transform = Transform3D(0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, 0, 0, 0)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+layers = 0
+material_override = SubResource("StandardMaterial3D_c2ln5")
+mesh = SubResource("BoxMesh_3inec")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+shape = SubResource("BoxShape3D_3inec")

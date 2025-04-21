@@ -1,0 +1,10 @@
+[gd_scene load_steps=2 format=3 uid="uid://7b2ag4yxo6x8"]
+
+[ext_resource type="PackedScene" uid="uid://ir0fxoj6g6cj" path="res://Resources/Assets/Models/patelnia.glb" id="1_iuwed"]
+
+[node name="Node3D" type="Node3D"]
+
+[node name="patelnia" parent="." instance=ExtResource("1_iuwed")]
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+layers = 2

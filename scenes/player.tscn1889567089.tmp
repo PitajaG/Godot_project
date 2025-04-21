@@ -1,0 +1,105 @@
+[gd_scene load_steps=11 format=3 uid="uid://dq0m5evwu6kcj"]
+
+[ext_resource type="Script" uid="uid://cpml5m0sfs8pj" path="res://Resources/Scripts/player.gd" id="1_3vyb7"]
+[ext_resource type="PackedScene" uid="uid://b5ckk8iygfhcp" path="res://scenes/lapka.tscn" id="3_qhqgy"]
+[ext_resource type="Texture2D" uid="uid://uovir8ojdgge" path="res://Resources/Assets/Textures/crosshair.png" id="4_qlg0r"]
+[ext_resource type="PackedScene" uid="uid://chqnb3kfwjlp8" path="res://scenes/FlightParticleRed.tscn" id="5_qlg0r"]
+[ext_resource type="Script" path="res://Resources/Scripts/sub_viewport.gd" id="5_tuyoq"]
+[ext_resource type="PackedScene" uid="uid://bunjk3i68kywb" path="res://scenes/FlightParticleYellow.tscn" id="6_tuyoq"]
+[ext_resource type="PackedScene" uid="uid://by5nlyvbsaa6c" path="res://scenes/UI/weapon_health_hud.tscn" id="7_fjrip"]
+
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_u8vuu"]
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_3vyb7"]
+
+[sub_resource type="ViewportTexture" id="ViewportTexture_fjrip"]
+viewport_path = NodePath("3dHudViewPorts/WeaponHealthHudViewPort")
+
+[node name="player" type="CharacterBody3D" groups=["Player"]]
+collision_mask = 4
+script = ExtResource("1_3vyb7")
+speed = 20.0
+jump_force = 7.265
+fuel_consumption = 30.0
+wall_jump_force = 5.0
+wall_jump_horizontal_multiplier = 9.975
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+visible = false
+mesh = SubResource("CapsuleMesh_u8vuu")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+shape = SubResource("CapsuleShape3D_3vyb7")
+
+[node name="Camera3D" type="Camera3D" parent="."]
+transform = Transform3D(0.999933, 0, 0.0116062, 0, 1, 0, -0.0116062, 0, 0.999933, 0, 1.09121, 0.294006)
+cull_mask = 1048573
+fov = 90.0
+
+[node name="Reach" type="RayCast3D" parent="Camera3D"]
+transform = Transform3D(1, 0, 0, 0, -0.0292686, -0.999952, 0, 2.99986, -0.00975622, -2.32831e-10, 0.0610282, -0.686821)
+
+[node name="TextureRect" type="TextureRect" parent="Camera3D"]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -20.0
+offset_top = -20.0
+offset_right = 20.0
+offset_bottom = 20.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("4_qlg0r")
+
+[node name="hook_ray" type="RayCast3D" parent="Camera3D"]
+transform = Transform3D(0.999933, -0.232936, 5.07323e-10, 0, -8.77288e-07, -1, 0.0116062, 20.0686, -4.37085e-08, 0.00341229, 0.0707899, -0.293986)
+
+[node name="FlightParticle1" parent="." instance=ExtResource("5_qlg0r")]
+transform = Transform3D(0.0213263, 0, -0.999773, 0, 1, 0, 0.999773, 0, 0.0213263, 0.099595, 0.898209, 0.915999)
+
+[node name="FlightParticle2" parent="." instance=ExtResource("6_tuyoq")]
+transform = Transform3D(0.113481, 0, 0.99354, 0, 1, 0, -0.99354, 0, 0.113481, 0.099595, 0.898209, 0.915999)
+
+[node name="WeaponViewport" type="SubViewportContainer" parent="."]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+stretch = true
+
+[node name="SubViewport" type="SubViewport" parent="WeaponViewport"]
+transparent_bg = true
+handle_input_locally = false
+size = Vector2i(1280, 720)
+render_target_update_mode = 4
+script = ExtResource("5_tuyoq")
+
+[node name="HandCamera" type="Camera3D" parent="WeaponViewport/SubViewport"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.091, 0.294)
+cull_mask = 2
+current = true
+fov = 110.0
+near = 0.01
+
+[node name="hand" parent="WeaponViewport/SubViewport/HandCamera" instance=ExtResource("3_qhqgy")]
+transform = Transform3D(0.999933, 0, 0.0116062, 0, 1, 0, -0.0116062, 0, 0.999933, 0.30275, -0.387203, 5.99027e-06)
+
+[node name="WeapnHealthHudSprite" type="Sprite3D" parent="WeaponViewport/SubViewport/HandCamera"]
+transform = Transform3D(0.965926, 0, 0.258819, 0, 1, 0, -0.258819, 0, 0.965926, 0, 0, -4.14258)
+layers = 2
+texture = SubResource("ViewportTexture_fjrip")
+
+[node name="3dHudViewPorts" type="Node3D" parent="."]
+transform = Transform3D(0.866025, 0, 0.5, 0, 1, 0, -0.5, 0, 0.866025, 0, 0, 0)
+
+[node name="WeaponHealthHudViewPort" type="SubViewport" parent="3dHudViewPorts"]
+transparent_bg = true
+handle_input_locally = false
+size = Vector2i(1280, 720)
+render_target_update_mode = 4
+
+[node name="WeaponHealthHud" parent="3dHudViewPorts/WeaponHealthHudViewPort" node_paths=PackedStringArray("health_bar_source") instance=ExtResource("7_fjrip")]
+health_bar_source = NodePath("../../..")

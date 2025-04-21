@@ -1,0 +1,8 @@
+[gd_scene load_steps=2 format=3 uid="uid://cuorla063xtnp"]
+
+[ext_resource type="PackedScene" uid="uid://by2hvmjal7bop" path="res://Resources/Assets/Models/schabow.glb" id="1_smew3"]
+
+[node name="schabow_gun" type="Node3D" groups=["Weapons"]]
+
+[node name="schabow" parent="." instance=ExtResource("1_smew3")]
+transform = Transform3D(0.25, 0, 0, 0, 0.25, 0, 0, 0, 0.25, 0, 0, 0)

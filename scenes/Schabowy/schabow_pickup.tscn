@@ -1,0 +1,20 @@
+[gd_scene load_steps=3 format=3 uid="uid://1wsl4q74tmva"]
+
+[ext_resource type="PackedScene" uid="uid://by2hvmjal7bop" path="res://Resources/Assets/Models/schabow.glb" id="1_umcyb"]
+
+[sub_resource type="CylinderShape3D" id="CylinderShape3D_umcyb"]
+height = 0.0600586
+radius = 0.272461
+
+[node name="schabow_pickup" type="RigidBody3D" groups=["Weapon_pickups"]]
+
+[node name="schabow" parent="." instance=ExtResource("1_umcyb")]
+transform = Transform3D(0.25, 0, 0, 0, 0.25, 0, 0, 0, 0.25, 0, 0, 0)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+transform = Transform3D(0.998084, -0.0617924, -0.00304378, 0.0618673, 0.996876, 0.0491043, 0, -0.0491986, 0.998789, -0.019771, 0.0195074, 0.00018017)
+shape = SubResource("CylinderShape3D_umcyb")
+
+[node name="MeshInstance3D2" type="MeshInstance3D" parent="."]

@@ -1,0 +1,26 @@
+[gd_scene load_steps=5 format=3 uid="uid://bbbj4usm3wwje"]
+
+[ext_resource type="Script" uid="uid://c2fwh5omuaika" path="res://Resources/Scripts/chrupiaca_projectile.gd" id="1_ctsc0"]
+[ext_resource type="PackedScene" uid="uid://hepp265j4lro" path="res://Resources/Assets/Models/chrupiaca.glb" id="1_rfx64"]
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_0lblo"]
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_iq3h7"]
+
+[node name="chrupiaca_projectile" type="RigidBody3D" groups=["Projectile"]]
+collision_layer = 8
+collision_mask = 8
+script = ExtResource("1_ctsc0")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+transform = Transform3D(0.416, 0, 0, 0, 0.06, 0, 0, 0, 0.416, 0, 0, 0)
+shape = SubResource("SphereShape3D_0lblo")
+
+[node name="chrupiaca" parent="." instance=ExtResource("1_rfx64")]
+transform = Transform3D(0.345, 0, 0, 0, 0.345, 0, 0, 0, 0.345, 0, 0, 0)
+
+[node name="hitbox" type="Area3D" parent="."]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="hitbox"]
+transform = Transform3D(0.406, 0, 0, 0, 0.078, 0, 0, 0, 0.406, 0, 0, 0)
+shape = SubResource("SphereShape3D_iq3h7")

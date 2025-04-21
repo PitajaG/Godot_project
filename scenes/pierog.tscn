@@ -1,0 +1,67 @@
+[gd_scene load_steps=7 format=3 uid="uid://1o06hf173hdf"]
+
+[ext_resource type="PackedScene" uid="uid://bax82j1fr8hmj" path="res://Resources/Assets/Models/pierog.glb" id="1_6h7aa"]
+
+[sub_resource type="GDScript" id="GDScript_6h7aa"]
+script/source = "extends Node
+"
+
+[sub_resource type="Animation" id="Animation_gvdok"]
+resource_name = "idle"
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("..:rotation")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.25, 0.5, 0.75, 1),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1),
+"update": 0,
+"values": [Vector3(0, 0, 0), Vector3(0, 1.5708, 0), Vector3(0, 3.14159, 0), Vector3(0, 4.53786, 0), Vector3(0, 6.28319, 0)]
+}
+
+[sub_resource type="Animation" id="Animation_7wpt5"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("..:rotation")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector3(0, 0, 0)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_7wpt5"]
+_data = {
+&"RESET": SubResource("Animation_7wpt5"),
+&"idle": SubResource("Animation_gvdok")
+}
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_gvdok"]
+radius = 0.275917
+height = 0.99855
+
+[node name="pierog" type="RigidBody3D" groups=["healing"]]
+script = SubResource("GDScript_6h7aa")
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+root_node = NodePath("../MeshInstance3D")
+libraries = {
+&"": SubResource("AnimationLibrary_7wpt5")
+}
+autoplay = "idle"
+
+[node name="pierog" parent="." instance=ExtResource("1_6h7aa")]
+transform = Transform3D(1, 0, 0, 0, 0.635944, 0.771736, 0, -0.771736, 0.635944, 0, 0, 0)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 0.771736, -0.635944, 0, 0.635944, 0.771736, 0, 0, 0)
+shape = SubResource("CapsuleShape3D_gvdok")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]

@@ -1,0 +1,35 @@
+[gd_scene load_steps=6 format=3 uid="uid://b6brm2xgv16ly"]
+
+[ext_resource type="Script" uid="uid://by8hf0p4p6iby" path="res://Resources/Scripts/UI/health_bar.gd" id="1_4gt67"]
+[ext_resource type="Texture2D" uid="uid://cxhp15cvvip12" path="res://Resources/Assets/UI_Icons/HealthBarEmpty.png" id="1_yfd5g"]
+[ext_resource type="Texture2D" uid="uid://ddu2vca7b0dp" path="res://Resources/Assets/UI_Icons/HealthBarFill.png" id="2_4gt67"]
+[ext_resource type="FontFile" uid="uid://1rdhb28ax1h6" path="res://Resources/Assets/Fonts/PixelAE-Bold.ttf" id="3_yyth1"]
+
+[sub_resource type="LabelSettings" id="LabelSettings_gt101"]
+font = ExtResource("3_yyth1")
+font_size = 22
+
+[node name="HealthBar" type="Control"]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 30.0
+script = ExtResource("1_4gt67")
+
+[node name="TextureProgressBar" type="TextureProgressBar" parent="."]
+layout_mode = 0
+offset_right = 485.0
+offset_bottom = 78.0
+value = 100.0
+texture_over = ExtResource("1_yfd5g")
+texture_progress = ExtResource("2_4gt67")
+texture_progress_offset = Vector2(35, 0)
+
+[node name="Label" type="Label" parent="."]
+layout_mode = 0
+offset_left = 15.0
+offset_top = 23.0
+offset_right = 57.0
+offset_bottom = 62.0
+text = "100"
+label_settings = SubResource("LabelSettings_gt101")
+horizontal_alignment = 1

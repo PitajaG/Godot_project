@@ -1,0 +1,84 @@
+[gd_scene load_steps=9 format=3 uid="uid://b5ckk8iygfhcp"]
+
+[ext_resource type="PackedScene" uid="uid://vp54qc658m3h" path="res://Resources/Assets/Models/łapka_rzut.glb" id="1_pnais"]
+[ext_resource type="Script" uid="uid://dn3bsrpk6oh6i" path="res://Resources/Scripts/hand.gd" id="2_0ayh3"]
+[ext_resource type="AnimationLibrary" uid="uid://dpafvy08idqn3" path="res://Resources/Animation_libraries/throwing_animation.res" id="4_1vp2t"]
+[ext_resource type="PackedScene" uid="uid://cuorla063xtnp" path="res://scenes/Schabowy/schabow_gun.tscn" id="4_ibvn7"]
+[ext_resource type="PackedScene" uid="uid://cfmsa5sdvm23o" path="res://scenes/Chrupiaca/chrupiaca_gun.tscn" id="5_q8kqn"]
+[ext_resource type="PackedScene" uid="uid://7b2ag4yxo6x8" path="res://scenes/patelnia.tscn" id="7_2sa5i"]
+
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_y7iav"]
+size = Vector3(0.395996, 0.328003, 0.963135)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_1vp2t"]
+cull_mode = 2
+depth_draw_mode = 1
+
+[node name="hand" instance=ExtResource("1_pnais")]
+script = ExtResource("2_0ayh3")
+
+[node name="Armature" parent="." index="0"]
+transform = Transform3D(0.999998, 0, 0.00178017, 0, 1, 0, -0.00178017, 0, 0.999998, 0.383445, -0.0377439, -0.0825473)
+
+[node name="Skeleton3D" parent="Armature" index="0"]
+bones/0/position = Vector3(0.117117, 0.158997, 0.600639)
+bones/0/rotation = Quaternion(0.745437, -0.0125189, 0.500767, -0.439772)
+bones/1/rotation = Quaternion(-0.13401, 0.0709354, 0.419863, 0.894832)
+bones/2/rotation = Quaternion(-0.268175, -0.0794323, 0.188721, 0.941359)
+bones/3/rotation = Quaternion(0.290191, -0.108485, 0.271016, 0.911357)
+bones/4/rotation = Quaternion(-0.364497, -0.0148162, -0.0929863, 0.926432)
+bones/5/rotation = Quaternion(-0.151932, 0.0738769, 0.00900962, 0.985585)
+bones/6/rotation = Quaternion(-0.341937, -0.0405917, 0.0509353, 0.937463)
+bones/7/rotation = Quaternion(-0.504948, 0.137549, 0.167579, 0.835479)
+bones/8/rotation = Quaternion(-0.140048, 0.0393608, -0.0606424, 0.987502)
+bones/9/rotation = Quaternion(-0.495961, -0.0665362, 0.180751, 0.846714)
+bones/10/rotation = Quaternion(-0.531803, 0.0350645, 0.191246, 0.824246)
+bones/11/rotation = Quaternion(-0.328673, -0.067472, 0.0584275, 0.940217)
+bones/12/rotation = Quaternion(-0.437062, -0.0867787, 0.236814, 0.863346)
+bones/13/rotation = Quaternion(-0.630715, 0.193141, 0.271371, 0.700894)
+bones/14/rotation = Quaternion(-0.398952, -0.0611306, 0.0601765, 0.912951)
+bones/15/rotation = Quaternion(-0.543962, -0.0812579, 0.233826, 0.801765)
+bones/16/rotation = Quaternion(-0.704653, 0.0560658, 0.319417, 0.631105)
+
+[node name="AnimationPlayer" parent="." index="1"]
+libraries = {
+&"": ExtResource("4_1vp2t")
+}
+autoplay = "melee_idle2"
+speed_scale = 1.465
+
+[node name="shooting_point" type="Node3D" parent="." index="2"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.158382, -0.408565, -1.87037)
+
+[node name="schabow_gun" parent="." index="3" instance=ExtResource("4_ibvn7")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.26593, -0.618428, -0.289168)
+visible = false
+
+[node name="chrupiaca_gun" type="Node3D" parent="." index="4" groups=["Weapons"]]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.111519, 0, -0.344688)
+visible = false
+
+[node name="chrup1" parent="chrupiaca_gun" index="0" instance=ExtResource("5_q8kqn")]
+transform = Transform3D(0.225, 0, 0, 0, 0.225, 0, 0, 0, 0.225, -0.49962, -0.579379, 0.105119)
+
+[node name="chrup2" parent="chrupiaca_gun" index="1" instance=ExtResource("5_q8kqn")]
+transform = Transform3D(0.225, 0, 0, 0, 0.225, 0, 0, 0, 0.225, -0.389298, -0.706279, 0.106302)
+
+[node name="chrup3" parent="chrupiaca_gun" index="2" instance=ExtResource("5_q8kqn")]
+transform = Transform3D(0.225, 0, 0, 0, 0.225, 0, 0, 0, 0.225, -0.287573, -0.765482, 0.17965)
+
+[node name="Patelnia" parent="." index="5" instance=ExtResource("7_2sa5i")]
+transform = Transform3D(0.400616, -0.916214, -0.00748412, 0.0643257, 0.0362727, -0.997269, 0.913985, 0.39904, 0.0734677, 0.70031, 0.747664, -2.17937)
+
+[node name="melee hitbox" type="Area3D" parent="." index="6"]
+transform = Transform3D(-0.0986836, 0, 3.56864, 0, 3.57, 0, -3.56864, 0, -0.0986836, 0, 0, -2.30402)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="melee hitbox" index="0"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.0112103, -0.0604243, -0.339393)
+shape = SubResource("BoxShape3D_y7iav")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="." index="7"]
+layers = 3
+material_override = SubResource("StandardMaterial3D_1vp2t")
+skeleton = NodePath("../Armature/Skeleton3D")
